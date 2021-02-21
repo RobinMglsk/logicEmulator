@@ -2,10 +2,14 @@ const L74HC00 = require('./chips/L74HC00');
 const L74HC30 = require('./chips/L74HC30');
 const L74HC138 = require('./chips/L74HC138');
 
-for(i = 0x7f80; i < 0x8000; i += 0x0f){
+let device = null;
+for(i = 0x0; i < 0xffff; i += 0x01){
     const address = i.toString(2).padStart(16, '0').split('').reverse().map(c => (c === '0') ? 0 : 1);
     const cs = getChipSelect(address);
-    console.log(address.reverse().join(''), ...getSelectedDevice(cs));
+    if(device !== getSelectedDevice(cs)[0]){
+        device = getSelectedDevice(cs)[0];
+        console.log('0x'+i.toString(16), ...getSelectedDevice(cs));
+    }
 }
 
 function getChipSelect(addr) {
